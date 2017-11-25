@@ -136,3 +136,4 @@ Temporary Items
 djangorest/djangorest/__pycache__/
 djangorest/socialnet/__pycache__/
 djangorest/socialnet/migrations/__pycache__/
+/djangorest/socialnet/migrations/
