@@ -1,17 +1,28 @@
 from django.contrib.auth.models import User
 
 from rest_framework import viewsets
+from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
 from .permissions import IsSuperOrNormalUser
-from .serializers import UserSerializer
+from .serializers import SocialnetUserSerializer, PostSerializer
+from .models import SocialnetUser, Post
 
 
-class UserView(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
-    model = User
+class SocialnetUserList(generics.ListCreateAPIView):
+    queryset = SocialnetUser.objects.all()
+    serializer_class = SocialnetUserSerializer
 
-    def get_permissions(self):
-        # allow non-authentificated user to create via POST requests
-        return (AllowAny() if self.request.method == 'POST' else IsSuperOrNormalUser()),
+
+class SocialnetUserDetail(generics.RetrieveAPIView):
+    queryset = SocialnetUser.objects.all()
+    serializer_class = SocialnetUserSerializer
+
+
+class PostList(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
 
