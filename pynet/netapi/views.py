@@ -33,4 +33,4 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class VoteViewSet(viewsets.ModelViewSet):
-    queryset = 
+    queryset =
