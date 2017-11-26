@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 import django.contrib.auth.password_validation as validators
 from django.core import exceptions
 
-from .models import Post
+from .models import Post, PostAction
 
 
 class PostSerializer(serializers.HyperlinkedModelSerializer):
@@ -12,7 +12,8 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('number_of_likes', 'content', 'owner')
+        fields = ('id', 'number_of_likes', 'content', 'owner')
+        read_only_fields = ('number_of_likes',)
 
     def create(self, validated_data):
         tmp_post = validated_data
@@ -25,13 +26,14 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         post = Post.objects.create(
             owner=user,
             content=tmp_post['content'],
-            number_of_likes=tmp_post['number_of_likes'],
+            # number_of_likes=tmp_post['number_of_likes'],
         )
         return post
 
 
 class UserSerializer(serializers.ModelSerializer):
-    posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
+    # posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
+    posts = PostSerializer(many=True)
 
     class Meta:
         model = User
@@ -76,5 +78,39 @@ class UserSerializer(serializers.ModelSerializer):
             else:
                 setattr(instance, attr, value)
         instance.save()
+        return instance
+
+
+class PostActionSerializer(serializers.ModelSerializer):
+    #posts = PostSerializer(many=True)
+    #users = UserSerializer(many=True)
+
+    class Meta:
+        model = PostAction
+        fields = '__all__'
+
+    def create(self, validated_data):
+        instance = None
+        # tmp_post = validated_data
+        # user = None
+        #
+
+        # request = self.context.get("request")
+        # if request and hasattr(request, "user"):
+        #     user = request.user
+        #
+        user = validated_data["user"]
+        post = validated_data["post"]
+        vote = validated_data["action_type"]
+
+        users_voted_for_post = PostAction.objects.filter(post=post)
+        if user not in users_voted_for_post:
+            instance = self.Meta.model(**validated_data)
+            if vote:
+                post.number_of_likes += 1
+            else:
+                post.number_of_likes -= 1
+            post.save()
+            instance.save()
         return instance
 

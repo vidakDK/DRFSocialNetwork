@@ -3,8 +3,8 @@ from rest_framework.decorators import detail_route
 from django.contrib.auth.models import User
 from rest_framework.generics import CreateAPIView
 
-from .serializers import UserSerializer, PostSerializer
-from .models import Post
+from .serializers import UserSerializer, PostSerializer, PostActionSerializer
+from .models import Post, PostAction
 from .permissions import IsOwnerOrReadOnly, IsStaffOrTargetUser
 
 
@@ -33,4 +33,5 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class VoteViewSet(viewsets.ModelViewSet):
-    queryset =
+    queryset = PostAction.objects.all()
+    serializer_class = PostActionSerializer
