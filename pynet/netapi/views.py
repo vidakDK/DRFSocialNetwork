@@ -16,8 +16,8 @@ class UserViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
 
-    def get_permissions(self):
-        return [permissions.AllowAny() if self.request.method == 'POST' else IsStaffOrTargetUser()]
+    # def get_permissions(self):
+    #     return [permissions.AllowAny() if self.request.method == 'POST' else IsStaffOrTargetUser()]
 
 
 class PostViewSet(viewsets.ModelViewSet):

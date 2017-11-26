@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'netapi.apps.NetapiConfig',
+    'votes',
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+# Random settings:
 REST_USE_JWT = True
 
 SITE_ID = 1
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
