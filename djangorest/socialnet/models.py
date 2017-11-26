@@ -23,11 +23,10 @@ class SocialnetUser(models.Model):
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance=None, **kwargs):
-        instance.profile.save()
+        instance.socialnetuser.save()
 
 
 class Post(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
     content = models.CharField(max_length=100, blank=True, default='')
     creator = models.ForeignKey(SocialnetUser, related_name='posts', on_delete=models.CASCADE)
     number_of_likes = models.IntegerField(default=0)
@@ -36,5 +35,5 @@ class Post(models.Model):
         ordering = ['number_of_likes']
 
     def __str__(self):
-        return "Created at='{}', Number of likes={}, Content='{}'".format(
+        return "CNumber of likes={}, Content='{}'".format(
             self.created, self.number_of_likes, self.content)
