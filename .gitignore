@@ -133,7 +133,5 @@ Temporary Items
 .apdisk
 
 .gitignore
-djangorest/djangorest/__pycache__/
-djangorest/socialnet/__pycache__/
-djangorest/socialnet/migrations/__pycache__/
-/djangorest/socialnet/migrations/
+/pynet/netapi/migrations/
+/pynet/db.sqlite3
