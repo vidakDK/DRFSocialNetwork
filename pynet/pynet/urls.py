@@ -1,4 +1,4 @@
-"""djangorest URL Configuration
+"""pynet URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('socialnet.urls'))
+    url(r'^', include('netapi.urls'))
 ]
