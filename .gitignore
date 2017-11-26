@@ -135,3 +135,4 @@ Temporary Items
 .gitignore
 /pynet/netapi/migrations/
 /pynet/db.sqlite3
+/.env/

@@ -16,6 +16,21 @@ class AccountHandler:
         self.last_name = last_name
         self.token = None
 
+    @staticmethod
+    def __send_request(url, data, headers, req_type):
+        response = 0
+        if req_type == 'POST':
+            response = requests.post(url=url, json=data, headers=headers)
+
+        elif req_type == 'GET':
+            s = requests.Session()
+            response = s.get(url=url, headers=headers, params=data)
+
+        if int(response.status_code) in [200, 201]:
+            return True, response
+        else:
+            return False, response
+
     def register(self):
         data = {
             "username": self.username,
@@ -62,17 +77,42 @@ class AccountHandler:
             print(response.text)
             return False
 
+    def vote(self, vote_type):
+        """vote_type is 1 for upvode and 0 for downvote"""
+        url = self.base_url + "votes/up/"
+        # param: model, id, vote
+        # i.e.model = movies & id = 359 & vote = true
+        data = {
+            "model": "Post",
+            "id": 1,
+            "vote": "true" if vote_type else "false",
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": "JWT {}".format(self.token),
+        }
+        req_type = 'GET'
+        success, resp = self.__send_request(url, data, headers, req_type)
+        return success, resp
+
 
 ah = AccountHandler("test16", "password123", "test16@gmail.com", "Vidak", "Kazic")
-reg_success = ah.register()
-if reg_success:
-    up_success = ah.add_name()
-    if up_success:
-        print("yay")
-    else:
-        print("failed updating name")
-else:
-    print("failed registration")
+
+## Register and update:
+# reg_success = ah.register()
+# if reg_success:
+#     up_success = ah.add_name()
+#     if up_success:
+#         print("yay")
+#     else:
+#         print("failed updating name")
+# else:
+#     print("failed registration")
+
+## Login:
+login_success = ah.login()
+if login_success:
+    vote_success, vote_response = ah.vote(1)
 
 print("end")
 
