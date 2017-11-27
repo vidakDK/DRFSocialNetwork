@@ -52,7 +52,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         # return Response(status=status.HTTP_303_SEE_OTHER, data={"message": str(existing_users_for_post)})
 
         if user_id not in existing_users_for_post:
-            return Response(status=status.HTTP_303_SEE_OTHER, data={"message": "user_id={}, existing_users={}".format(user_id, str(existing_users_for_post))})
+            # return Response(status=status.HTTP_303_SEE_OTHER, data={"message": "user_id={}, existing_users={}".format(user_id, str(existing_users_for_post))})
             if vote:
                 # Number of likes increases if it is an upvote;
                 # otherwise it stays the same as user cannot unlike a post that he did not like first.
@@ -61,6 +61,7 @@ class VoteViewSet(viewsets.ModelViewSet):
                     post = Post.objects.filter(id=post_id).first()
                     post.number_of_likes += 1
                     post.save()
+                    serializer.save()
                     return Response(serializer.data)
                 else:
                     return Response(data="Serializer call for PostAction is invalid.", status=status.HTTP_409_CONFLICT)
