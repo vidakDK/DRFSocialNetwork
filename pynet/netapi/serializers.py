@@ -26,13 +26,11 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         post = Post.objects.create(
             owner=user,
             content=tmp_post['content'],
-            # number_of_likes=tmp_post['number_of_likes'],
         )
         return post
 
 
-class UserSerializer(serializers.ModelSerializer):
-    # posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     posts = PostSerializer(many=True, read_only=True)
 
     class Meta:
@@ -87,19 +85,12 @@ class PostActionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostAction
         fields = ('user_id', 'post_id', 'action_type')
-        # read_only_fields = ('user_id',)
+        read_only_fields = ('user_id',)
 
     def create(self, validated_data):
-        user_id = None
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            validated_data['user_id'] = int(request.user.id)
-
-        instance = self.meta.objects.create(**validated_data)
-        # instance = self.Meta.model.objects.create(
-        #     user_id=user_id,
-        #     post_id=post_id,
-        #     action_type=validated_data['action_type']
-        # )
-        instance.save()
-        return instance
+        user = self.context['request'].user
+        post_action = PostAction.objects.create(
+            user_id=user,
+            **validated_data
+        )
+        return post_action
