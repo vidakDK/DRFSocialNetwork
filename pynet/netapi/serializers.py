@@ -82,7 +82,24 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PostActionSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user_id.id')
+
     class Meta:
         model = PostAction
-        fields = '__all__'
+        fields = ('user_id', 'post_id', 'action_type')
+        # read_only_fields = ('user_id',)
 
+    def create(self, validated_data):
+        user_id = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            validated_data['user_id'] = int(request.user.id)
+
+        instance = self.meta.objects.create(**validated_data)
+        # instance = self.Meta.model.objects.create(
+        #     user_id=user_id,
+        #     post_id=post_id,
+        #     action_type=validated_data['action_type']
+        # )
+        instance.save()
+        return instance

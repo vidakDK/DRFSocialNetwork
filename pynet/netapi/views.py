@@ -43,10 +43,11 @@ class VoteViewSet(viewsets.ModelViewSet):
         If user did not vote for a given post, register his vote as a new instance
         in the PostAction relationship table.
         """
-        user_id = int(request.data["user_id"])
+        user_id = int(request.user.id)
         post_id = int(request.data["post_id"])
         vote = int(request.data["action_type"])
 
+        #return Response(status=status.HTTP_303_SEE_OTHER, data={"message": post_id})
         existing_actions_for_post = PostAction.objects.filter(post_id=post_id).all()
         existing_users_for_post = [int(action.user_id.id) for action in existing_actions_for_post]
         # return Response(status=status.HTTP_303_SEE_OTHER, data={"message": str(existing_users_for_post)})
@@ -58,11 +59,12 @@ class VoteViewSet(viewsets.ModelViewSet):
                 # otherwise it stays the same as user cannot unlike a post that he did not like first.
                 serializer = PostActionSerializer(data=request.data)
                 if serializer.is_valid():
+                    return Response(status=status.HTTP_303_SEE_OTHER, data={"message": str(serializer.data)})
                     post = Post.objects.filter(id=post_id).first()
                     post.number_of_likes += 1
                     post.save()
-                    serializer.save()
-                    return Response(serializer.data)
+                    # serializer.save()
+                    return Response(serializer.validated_data)
                 else:
                     return Response(data="Serializer call for PostAction is invalid.", status=status.HTTP_409_CONFLICT)
 
