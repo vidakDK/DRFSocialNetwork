@@ -13,7 +13,7 @@ class Post(models.Model):
     class Meta:
         ordering = ['id']
 
-    def __str__ (self):
+    def __str__(self):
         return "{}. Owner='{}', NumLikes={}, Content='{}'".format(self.id,
                                                                   self.owner.username,
                                                                   self.number_of_likes,
@@ -21,10 +21,10 @@ class Post(models.Model):
 
 
 class PostAction(models.Model):
-    POST_ACTION_TYPES = ((1, 'like'), (0, 'dislike'))
-    action_type = models.CharField(choices=POST_ACTION_TYPES, max_length=1)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    POST_ACTION_TYPES = ((1, 'like'), (0, 'unlike'))
+    action_type = models.IntegerField(choices=POST_ACTION_TYPES)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['post']
+        ordering = ['post_id']

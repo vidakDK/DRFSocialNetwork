@@ -33,7 +33,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     # posts = serializers.PrimaryKeyRelatedField(many=True, queryset=Post.objects.all())
-    posts = PostSerializer(many=True)
+    posts = PostSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -82,35 +82,46 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class PostActionSerializer(serializers.ModelSerializer):
-    #posts = PostSerializer(many=True)
-    #users = UserSerializer(many=True)
-
     class Meta:
         model = PostAction
         fields = '__all__'
 
-    def create(self, validated_data):
-        instance = None
-        # tmp_post = validated_data
-        # user = None
-        #
+    # def create(self, validated_data):
+    #     """
+    #     If user did not vote for a given post, register his vote as a new instance
+    #     in the PostAction relationship table.
+    #     """
+    #     instance = None
+    #     user = validated_data["user"]
+    #     post = validated_data["post"]
+    #     vote = validated_data["action_type"]
+    #
+    #     existing_actions_for_post = PostAction.objects.filter(post=post)
+    #     # existing_users_for_post = existing_actions_for_post.user
+    #     existing_users_for_post = [action.user for action in existing_actions_for_post]
+    #
+    #     if user not in existing_users_for_post:
+    #         if vote:
+    #             # Number of likes increases if it is an upvote;
+    #             # otherwise it stays the same as user cannot unlike a post that he did not like first.
+    #             instance = self.Meta.model(**validated_data)
+    #             post.number_of_likes += 1
+    #             post.save()
+    #             instance.save()
+    #     else:
+    #         existing_action_by_user = None
+    #         for action in existing_actions_for_post:
+    #             if action.user == user:
+    #                 existing_action_by_user = action
+    #                 break
+    #
+    #         existing_vote_by_user = existing_action_by_user.action_type
+    #         if vote == 0 and existing_vote_by_user == 1:
+    #             # This means that the new action is an unlike.
+    #             post.number_of_likes -= 1
+    #             post.save()
+    #             existing_action_by_user.delete()
+    #
+    #     return instance
 
-        # request = self.context.get("request")
-        # if request and hasattr(request, "user"):
-        #     user = request.user
-        #
-        user = validated_data["user"]
-        post = validated_data["post"]
-        vote = validated_data["action_type"]
-
-        users_voted_for_post = PostAction.objects.filter(post=post)
-        if user not in users_voted_for_post:
-            instance = self.Meta.model(**validated_data)
-            if vote:
-                post.number_of_likes += 1
-            else:
-                post.number_of_likes -= 1
-            post.save()
-            instance.save()
-        return instance
 
