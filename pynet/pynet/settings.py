@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'netapi.apps.NetapiConfig',
-    'votes',
 ]
 
 MIDDLEWARE = [
