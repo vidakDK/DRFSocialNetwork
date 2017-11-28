@@ -47,6 +47,28 @@ INSTALLED_APPS = [
     'netapi.apps.NetapiConfig',
 ]
 
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'netapi.serializers.RegisterSerializer',
+}
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email' # (="username" | "email" | "username_email)
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+REST_AUTH_SERIALIZERS = {
+    'LOGIN_SERIALIZER': 'netapi.serializers.LoginSerializer',
+}
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -144,3 +166,5 @@ REST_USE_JWT = True
 SITE_ID = 1
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
