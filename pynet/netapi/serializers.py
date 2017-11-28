@@ -42,7 +42,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'password', 'first_name', 'last_name', 'posts')
-        write_only_fields = ('password',)
+        # write_only_fields = ('password',)
+        read_only_fields = ('id', 'email', 'first_name', 'last_name', 'password')
 
     def get_token(self, obj):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER

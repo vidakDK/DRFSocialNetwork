@@ -23,18 +23,18 @@ These instructions will get you a copy of the project up and running on your loc
 4. Run Django server:
     `python manage.py runserver`
 
-### Usage
+### API Details
 
 #### Project URL structure:
-`/register` to register
-`/login` to login
-`/logout` to logout
-`/api` to access the api
-    `/users`
-    `/posts`
-    `/votes`
+url | `GET` action | `POST` action
+`/register` | - | register new user
+`/login` | - | login new user and obtain JWT token
+`/logout` | - | logout current user
+`/api/users` | list all registered users and their posts | -
+`/api/posts` | view all current posts | create a new post |
+`/api/votes` | view all current (user,post,like) tuples | like/unlike a post
 
-#### Actions:
+#### Standard Actions:
 
 * Send POST request to `/register` with required fields.
   Example:
@@ -57,10 +57,10 @@ These instructions will get you a copy of the project up and running on your loc
   }
   Response gives JWT token in data:
   ```
-  token = response.data
+  token = response.json()['token']
   ```
 
-* Send POST request to `/api` with required fields and JWT token in the header:
+* Send POST request to `/api/` with required fields and JWT token in the header:
   Example of a like action, action_type is 1 for like and 0 for unlike:
   ```
   url = "http://127.0.0.1:8000/api/votes/"
@@ -74,6 +74,20 @@ These instructions will get you a copy of the project up and running on your loc
   }
   response = requests.post(url=url, json=json, headers=headers)
   ```
+  Analogue actions are made for creating posts and liking posts.
 
 
+### Bot actions
 
+The bot satisfies pre-made conditions that test the API functionality, i.e. user/post registration, liking posts, etc.
+
+#### Bot usage
+
+Bot is started by running the following commands:
+```
+cd bot
+python bot_actions.py
+```
+
+### Acknowledgments
+* Thanks to the awesome django-rest-auth package from @Tivix.
