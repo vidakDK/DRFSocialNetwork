@@ -1,11 +1,7 @@
 import requests
 import random
 import string
-
-NUMBER_OF_USERS = 3
-MAX_POSTS_PER_USER = 5
-MAX_LIKES_PER_USER = 2
-POST_LENGTH = 30
+import bot.bot_config as cfg
 
 
 class BotStuff:
@@ -65,7 +61,7 @@ class BotStuff:
 
     def __make_post(self):
         payload = {
-            "content": ''.join(random.choice(string.ascii_lowercase) for _ in range(POST_LENGTH)),
+            "content": ''.join(random.choice(string.ascii_lowercase) for _ in range(cfg.POST_LENGTH)),
         }
         req_type = "POST"
         headers = {
@@ -114,7 +110,7 @@ class BotStuff:
             return False, response
 
     def __send_random_number_of_posts(self):
-        number_posts = random.randint(1, MAX_POSTS_PER_USER)
+        number_posts = random.randint(1, cfg.MAX_POSTS_PER_USER)
         self.users_posts[self.current_user_email] = number_posts
         for i in range(number_posts):
             success, resp = self.__make_post()
@@ -125,7 +121,7 @@ class BotStuff:
 
     def __bot_signup_and_post(self):
         """Register accounts and make posts"""
-        for bot_id in range(NUMBER_OF_USERS):
+        for bot_id in range(cfg.NUMBER_OF_USERS):
             success, resp = self.__register_user()
             if not success:
                 print("Failed to register user, code={}, resp='{}'".format(resp.status_code, resp.text))
@@ -184,7 +180,7 @@ class BotStuff:
 
     def __get_next_user_and_like(self):
         # Get all users that have not reached max number of likes:
-        valid_users = {k: v for k, v in self.users_likes.items() if v < MAX_LIKES_PER_USER}
+        valid_users = {k: v for k, v in self.users_likes.items() if v < cfg.MAX_LIKES_PER_USER}
         if not valid_users:
             bot_finished = True
             success = True
@@ -196,7 +192,7 @@ class BotStuff:
         self.__login_user(current_user_email, self.users_passwords[current_user_email])
 
         # Like posts until we run out of posts or we reach max number of likes per user:
-        while self.users_likes[current_user_email] < MAX_LIKES_PER_USER:
+        while self.users_likes[current_user_email] < cfg.MAX_LIKES_PER_USER:
             success, bot_finished = self.__like_one_random_valid_post()
             if not success or bot_finished:
                 print("Either failure or bot is finished.")

@@ -86,11 +86,23 @@ url | `GET` action | `POST` action
 
 The bot satisfies pre-made conditions that test the API functionality, i.e. user/post registration, liking posts, etc.
 
-It is started by running the following commands:
+1. It is started by running the following commands:
 ```
 cd bot
 python bot_actions.py
 ```
+
+2. Bot configuration parameters are in `bot_config.py`.
+
+Parameters:
+```
+NUMBER_OF_USERS,
+MAX_POSTS_PER_USER,
+MAX_LIKES_PER_USER,
+POST_LENGTH,
+```
+
+
 
 ### Acknowledgments
 * Thanks to the awesome django-rest-auth package from @tivix.
