@@ -2,25 +2,25 @@ import requests
 import random
 import string
 
-NUMBER_OF_USERS = 5
-MAX_POSTS_PER_USER = 10
-MAX_LIKES_PER_USER = 5
+NUMBER_OF_USERS = 3
+MAX_POSTS_PER_USER = 5
+MAX_LIKES_PER_USER = 2
 POST_LENGTH = 30
 
 
 class BotStuff:
-    base_url = "http://127.0.0.1:8000/"
-    registration_url = "{}/{}".format(base_url, "registration")
-    login_url = "{}/api/{}".format(base_url, "login")
-    users_url = "{}/api/{}".format(base_url, "users")
-    posts_url = "{}/api/{}".format(base_url, "posts")
-    votes_url = "{}/api/{}".format(base_url, "votes")
+    base_url = "http://127.0.0.1:8000"
+    registration_url = "{}/{}/".format(base_url, "register")
+    login_url = "{}/{}/".format(base_url, "login")
+    users_url = "{}/api/{}/".format(base_url, "users")
+    posts_url = "{}/api/{}/".format(base_url, "posts")
+    votes_url = "{}/api/{}/".format(base_url, "votes")
 
     def __init__(self):
         self.counter = 1
-        self.users_posts = {} # dict {email : number_of_posts_user_made}
-        self.users_passwords = {} # dict {email : password}
-        self.users_likes = {} # dict {email : number_of_likes}
+        self.users_posts = {}  # dict {email : number_of_posts_user_made}
+        self.users_passwords = {}  # dict {email : password}
+        self.users_likes = {}  # dict {email : number_of_likes}
 
         # Current attributes that change with every active user
         self.current_token = None
@@ -30,7 +30,7 @@ class BotStuff:
     def __register_user(self):
         """Registers the next user with regards to the counter value, and sets the active values to this user"""
         email = "user{}@host.com".format(self.counter)
-        password = "password{}".format(self.counter)
+        password = "stupidbotpassword{}".format(self.counter)
         first_name = "Bot{}".format(self.counter)
         last_name = "Botson{}".format(self.counter)
         payload = {
@@ -86,7 +86,7 @@ class BotStuff:
             "Content-Type": "application/json",
             "Authorization": "JWT {}".format(self.current_token),
         }
-        success, resp = self.__send_request(self.posts_url, req_type, payload, headers)
+        success, resp = self.__send_request(self.votes_url, req_type, payload, headers)
         return success, resp
 
     def __get_all_posts(self):
@@ -194,7 +194,6 @@ class BotStuff:
         # Get valid user that has maximum number of posts:
         current_user_email = max(valid_users, key=lambda key: self.users_posts[key])
         self.__login_user(current_user_email, self.users_passwords[current_user_email])
-        self.users_likes[current_user_email] = 0
 
         # Like posts until we run out of posts or we reach max number of likes per user:
         while self.users_likes[current_user_email] < MAX_LIKES_PER_USER:
@@ -213,6 +212,10 @@ class BotStuff:
         """Do like activity according to set rules"""
         done_flag = False
         success = None
+
+        # Initialize user likes to zero:
+        for email in self.users_passwords:
+            self.users_likes[email] = 0
 
         while not done_flag:
             success, bot_finished = self.__get_next_user_and_like()
@@ -236,7 +239,9 @@ class BotStuff:
         return True
 
 
-
+if __name__ == '__main__':
+    bot = BotStuff()
+    bot.start_bot()
 
 
 
