@@ -27,6 +27,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 #### Project URL structure:
 url | `GET` action | `POST` action
+--- | ------------ | -------------
 `/register` | - | register new user
 `/login` | - | login new user and obtain JWT token
 `/logout` | - | logout current user
