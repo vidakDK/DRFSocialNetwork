@@ -12,16 +12,19 @@ These instructions will get you a copy of the project up and running on your loc
     `python3 -m venv .env`
     `source ./env/bin/activate`
 
-2. Install requirements:
+1. Install requirements:
     `pip3 install -r requirements.txt`
 
-3. Source into API, create database, and migrate:
+1. Source into API, create database, and migrate:
     `cd pynet`
     `python manage.py makemigrations`
     `python manage.py migrate`
 
-4. Run Django server:
+1. Run Django server:
     `python manage.py runserver`
+
+1. (Optional) Drop and recreate database:
+    `./reset_database.sh`
 
 ### API Details
 
