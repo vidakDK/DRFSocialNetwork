@@ -79,17 +79,15 @@ url | `GET` action | `POST` action
   Analogue actions are made for creating posts and liking posts.
 
 
-### Bot actions
+### Automated Bot
 
 The bot satisfies pre-made conditions that test the API functionality, i.e. user/post registration, liking posts, etc.
 
-#### Bot usage
-
-Bot is started by running the following commands:
+It is started by running the following commands:
 ```
 cd bot
 python bot_actions.py
 ```
 
 ### Acknowledgments
-* Thanks to the awesome django-rest-auth package from @Tivix.
+* Thanks to the awesome django-rest-auth package from @tivix.
