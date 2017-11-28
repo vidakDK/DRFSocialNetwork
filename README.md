@@ -39,7 +39,7 @@ url | `GET` action | `POST` action
 
 * Send POST request to `/register` with required fields.
   Example:
-  ```
+  ```python
   request.data = {
     "email": "user@host.com",
     "first_name": "John",
@@ -51,19 +51,20 @@ url | `GET` action | `POST` action
 
 * Send POST request to `/login` with required fields.
   Example:
-  ```
+  ```python
   request.data = {
     "email": "user@host.com",
     "password": "password1",
   }
-  Response gives JWT token in data:
   ```
+  Response gives JWT token in data:
+  ```python
   token = response.json()['token']
   ```
 
 * Send POST request to `/api/` with required fields and JWT token in the header:
   Example of a like action, action_type is 1 for like and 0 for unlike:
-  ```
+  ```python
   url = "http://127.0.0.1:8000/api/votes/"
   json = {
     "post_id": 1,
