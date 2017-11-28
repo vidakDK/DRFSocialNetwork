@@ -1,7 +1,7 @@
 import requests
 import random
 import string
-import bot.bot_config as cfg
+import bot_config as cfg
 
 
 class BotStuff:
